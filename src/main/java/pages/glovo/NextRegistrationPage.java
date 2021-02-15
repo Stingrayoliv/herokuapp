@@ -5,10 +5,10 @@ import org.openqa.selenium.support.FindBy;
 
 public class NextRegistrationPage {
 
-    @FindBy(xpath = "//section[@class='principal local']/div[@class='wrapper']/p[@class='title']")
-    private SelenideElement text;
+    @FindBy(className = "title")
+    private SelenideElement pageTitle;
 
-    public SelenideElement getText() {
-        return text;
+    public SelenideElement getPageTitle() {
+        return pageTitle;
     }
 }

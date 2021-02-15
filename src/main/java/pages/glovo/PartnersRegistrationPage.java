@@ -1,20 +1,22 @@
 package pages.glovo;
 
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.github.javafaker.PhoneNumber;
 import org.openqa.selenium.support.FindBy;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.page;
 
 public class PartnersRegistrationPage {
     @FindBy(id = "onetrust-accept-btn-handler")
     private SelenideElement cookies;
 
-    @FindBy(xpath = "p[@class='dropdown-toggle']")
+    @FindBy(xpath = "//p[contains(.,'Country')]")
     private SelenideElement dropdownCountry;
 
-    @FindBy(css = "//span[contains(.,'Франция')]")
-    private SelenideElement selectedCountry;
+    @FindBy(id = "countrySpan")
+    private ElementsCollection countryList;
 
     @FindBy(xpath = "//div[2]/input")
     private SelenideElement firstNameInput;
@@ -25,37 +27,35 @@ public class PartnersRegistrationPage {
     @FindBy(xpath = "//input[@type='email']")
     private SelenideElement emailInput;
 
-    @FindBy(css = ".multiselect__input")
+    @FindBy(css = ".multiselect__select")
     private SelenideElement dropdownCodeCountryTel;
 
-    @FindBy(xpath = "//span[@class='multiselect__single']")
-    private SelenideElement selectedCodeCountry;
+    @FindBy(css = ".multiselect__option")
+    private ElementsCollection listCodeCountry;
 
-    @FindBy(id = "phon")
+    @FindBy(name = "phone")
     private SelenideElement telInput;
 
-    @FindBy(xpath = "//span[class='valor']")
+    @FindBy(xpath = "//div[6]/div/p")
     private SelenideElement dropdownType;
 
-    @FindBy(xpath = "//span[contains(.,'Ресторан')]")
-    private SelenideElement typeOption;
+    @FindBy(css = ".active > li")
+    private ElementsCollection listOfTypes;
 
-    @FindBy(xpath = "//input[@name='numberBranches']")
+    @FindBy(name="numberBranches")
     private SelenideElement inputNumberBranches;
 
-    @FindBy(xpath = "//form[@id='form-home']/div/div[8]/div/label/span")
+    @FindBy(css = ".label-icon")
     private SelenideElement checkBox;
 
-    @FindBy(xpath = "//button[contains(.,'Продолжить')]")
+    @FindBy(css = ".btn-primary")
     private SelenideElement nextButton;
 
-    public  void selectDropdownCountry(String country){
-        dropdownCountry.selectOption(country);
+    public void selectDropdownCountry(String country) {
+        dropdownCountry.click();
+        countryList.findBy( text( country ) ).click();
     }
 
-    public SelenideElement selectCountry(){
-        return selectedCountry;
-    }
 
     public void fillName(String name) {
         firstNameInput.setValue( name );
@@ -70,36 +70,31 @@ public class PartnersRegistrationPage {
     }
 
     public void selectDropdownCodeCountryTel(String codeCountry) {
-        selectedCodeCountry.selectOption( codeCountry );
+        dropdownCodeCountryTel.click();
+        listCodeCountry.findBy( text(codeCountry) ).click();
     }
 
-    public SelenideElement getSelectedCodeCountry(){
-        return selectedCodeCountry;
-    }
-
-    public void fillTelInput(PhoneNumber tel) {
-        telInput.setValue( tel.phoneNumber() );
+    public void fillTelInput(String tel) {
+        telInput.setValue( tel );
     }
 
     public void selectDropdownType(String type) {
-        dropdownType.selectOption( type );
+        dropdownType.click();
+        listOfTypes.findBy( text(type) ).click();
     }
 
-    public SelenideElement getType(){
-        return typeOption;
-    }
 
     public void fillNumberBranches(String number) {
         inputNumberBranches.setValue( number );
     }
 
-    public void fillCheckBox(){
+    public void fillCheckBox() {
         checkBox.click();
     }
 
-    public NextRegistrationPage getNextPage(){
+    public NextRegistrationPage clickNextButton() {
         nextButton.click();
-        return page(NextRegistrationPage.class);
+        return page( NextRegistrationPage.class );
     }
 
     public void acceptCookies() {
