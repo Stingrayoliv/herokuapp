@@ -1,36 +1,40 @@
 package pages.idealo;
 
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import static com.codeborne.selenide.Selenide.*;
+
 public class SearchPage {
-    @FindBy(name = "message-component message-button no-children btn-accept-al")
-    private SelenideElement cookies;
+
+    private static final By BODY= By.cssSelector( "body" );
+    private static final By OK_BTN=By.cssSelector( ".btn-accept-all" );
+
+    @FindBy(css = "body > div > iframe")
+    private SelenideElement iframe;
+
 
     public void acceptCookies() {
-        cookies.click();
+        WebDriver driver = WebDriverRunner.getWebDriver();
+        WebElement frame = driver.switchTo().frame( iframe ).findElement(BODY );
+        frame.findElement( OK_BTN ).click();
+        driver.switchTo().parentFrame();
     }
 
     @FindBy(id = "i-search-input")
     private SelenideElement inputSearch;
 
-    @FindBy(className = "sortBox-formSelect")
-    private SelenideElement dropdownPriceFilter;
 
-    @FindBy(name = "maxPrice")
-    private SelenideElement selectedHighestPrice;
 
-    public void makeSearch(String value) {
+    public ProductCategoryPage makeSearch(String value) {
         inputSearch.setValue( value );
         inputSearch.sendKeys( Keys.ENTER );
+        return page(ProductCategoryPage.class);
     }
 
-    public void selectPrice(String priceFilter) {
-        dropdownPriceFilter.selectOption( priceFilter );
-    }
-
-    public SelenideElement receiveHighestPrice(){
-        return selectedHighestPrice;
-    }
 }
